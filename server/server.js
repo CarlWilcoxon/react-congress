@@ -1,7 +1,7 @@
-
 const express = require('express');
 require('dotenv').config();
 const cors= require('cors');
+// const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -16,9 +16,11 @@ const options = {
     } else {
       callback(console.error('Not allowed by CORS'))
     }
-  }
+  },
+  credentials: true
 };
 app.use(cors(options));
+// app.use(cookieParser());
 
 
 // Body parser middleware
@@ -27,17 +29,17 @@ app.use(express.urlencoded({extended:true}));
 
 // Route includes
 // const historyRouter = require('./routes/history.router');
-// const imageRouter = require('./routes/image.router');
+const memberRouter = require('./routes/member.router');
 
 /* Routes */
 // app.use('/api/history', historyRouter)
-// app.use('/public', imageRouter)
+app.use('/member', memberRouter)
 
 // Serve static files
 app.use(express.static('build'));
 
 // App Set //
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 /** Listen **/
 app.listen(PORT, () => {

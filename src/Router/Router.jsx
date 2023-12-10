@@ -13,15 +13,16 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
+import ManualRequest from '../ManualRequest/ManualRequest';
 
 function Router(props) {
   const { children } = props;
   if (typeof window === 'undefined') {
-    return <StaticRouter location="/drafts">{children}</StaticRouter>;
+    return <StaticRouter location="/home">{children}</StaticRouter>;
   }
 
   return (
-    <MemoryRouter initialEntries={['/drafts']} initialIndex={0}>
+    <MemoryRouter initialEntries={['/home']} initialIndex={0}>
       {children}
     </MemoryRouter>
   );
@@ -50,18 +51,20 @@ function MyTabs() {
   // This means that if you have nested routes like:
   // users, users/new, users/edit.
   // Then the order should be ['users/add', 'users/edit', 'users'].
-  const routeMatch = useRouteMatch(['/inbox/:id', '/drafts', '/trash']);
+  const routeMatch = useRouteMatch(['/inbox/:id', '/drafts', '/request', '/home']);
   const currentTab = routeMatch?.pattern?.path;
 
   return (
     <Tabs value={currentTab}>
+      <Tab label="Home" value="/home" to="/home" component={Link} />
       <Tab label="Inbox" value="/inbox/:id" to="/inbox/1" component={Link} />
       <Tab label="Drafts" value="/drafts" to="/drafts" component={Link} />
-      <Tab label="Trash" value="/trash" to="/trash" component={Link} />
+      <Tab label="Request" value="/request" to="/request" component={Link} />
     </Tabs>
   );
 }
 
+// Displays the current Route
 function CurrentRoute() {
   const location = useLocation();
 
@@ -76,10 +79,11 @@ export default function TabsRouter() {
   return (
     <Router>
       <Box sx={{ width: '100%' }}>
+        <MyTabs />
         <Routes>
           <Route path="*" element={<CurrentRoute />} />
+          <Route path="request" element={<ManualRequest />} />
         </Routes>
-        <MyTabs />
       </Box>
     </Router>
   );
